@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:models="clr-namespace:Pairs.Models"
+             xmlns:viewModels="clr-namespace:Pairs.ViewModels"
+             x:Class="Pairs.Views.MainPage"
+             x:DataType="viewModels:MainPageViewModel"
+             BackgroundColor="{StaticResource Color01}">
+    <ContentPage.BindingContext>
+        <viewModels:MainPageViewModel />
+    </ContentPage.BindingContext>
+    <ContentPage.Resources>
+        <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        <toolkit:EnumToBoolConverter x:Key="IsLevelCompleteConverter">
+            <toolkit:EnumToBoolConverter.TrueValues>
+                <models:LevelState>Complete</models:LevelState>
+                <models:LevelState>Complete</models:LevelState>
+            </toolkit:EnumToBoolConverter.TrueValues>
+        </toolkit:EnumToBoolConverter>
+        <toolkit:EnumToBoolConverter x:Key="IsNotPlayingConverter">
+            <toolkit:EnumToBoolConverter.TrueValues>
+                <models:LevelState>None</models:LevelState>
+                <models:LevelState>Complete</models:LevelState>
+            </toolkit:EnumToBoolConverter.TrueValues>
+        </toolkit:EnumToBoolConverter>
+        <toolkit:EnumToBoolConverter x:Key="IsPlayingConverter">
+            <toolkit:EnumToBoolConverter.TrueValues>
+                <models:LevelState>Playing</models:LevelState>
+                <models:LevelState>Playing</models:LevelState>
+            </toolkit:EnumToBoolConverter.TrueValues>
+        </toolkit:EnumToBoolConverter>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="80,*">
+        <Label Text="{Binding GuessedCount}"
+               FontSize="Title"
+               TextColor="{StaticResource Color03}"
+               HorizontalOptions="End"
+               VerticalOptions="End"
+               Margin="0,0,25,0" />
+
+        <Label Text="Well done!"
+               TextColor="White"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"
+               Grid.RowSpan="2"
+               Margin="0,-100,0,0"
+               FontSize="Title"
+               IsVisible="{Binding State, Converter={StaticResource IsLevelCompleteConverter}}" />
+
+        <Polygon Points="0,0 80,40 0,80"
+                 Fill="#2A9D8F"
+                 WidthRequest="100"
+                 Grid.RowSpan="2"
+                 HeightRequest="100"
+                 HorizontalOptions="Center"
+                 VerticalOptions="Center"
+                 IsVisible="{Binding State, Converter={StaticResource IsNotPlayingConverter}}">
+            <Polygon.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding PlayCommand}" />
+            </Polygon.GestureRecognizers>
+        </Polygon>
+
+        <FlexLayout BindableLayout.ItemsSource="{Binding Speakers}"
+                    Direction="Row"
+                    Wrap="Wrap"
+                    JustifyContent="Center"
+                    AlignItems="Center"
+                    AlignContent="Center"
+                    IsVisible="{Binding State, Converter={StaticResource IsPlayingConverter}}"
+                    Grid.RowSpan="2">
+            <BindableLayout.ItemTemplate>
+                <DataTemplate x:DataType="viewModels:SpeakerViewModel">
+                    <Grid WidthRequest="80"
+                          HeightRequest="80"
+                          Margin="5">
+                        <Frame IsClippedToBounds="True"
+                               Padding="0"
+                               HasShadow="False"
+                               CornerRadius="40"
+                               IsVisible="{Binding IsGuessed, Converter={StaticResource InvertedBoolConverter}}"
+                               BackgroundColor="{StaticResource Color02}">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Path=SelectTileCommand, Source={RelativeSource AncestorType={x:Type viewModels:MainPageViewModel}}}"
+                                                      CommandParameter="{Binding}" />
+                            </Frame.GestureRecognizers>
+
+                            <Image HorizontalOptions="Fill"
+                                   VerticalOptions="Fill"
+                                   IsVisible="{Binding IsSelected}"
+                                   Source="{Binding ProfileImageUrl}" />
+                        </Frame>
+                    </Grid>
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </FlexLayout>
+    </Grid>
+
+</ContentPage>

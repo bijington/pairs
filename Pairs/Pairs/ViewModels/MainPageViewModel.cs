@@ -109,9 +109,8 @@ namespace Pairs.ViewModels
                 actualSpeakers[n] = value;
             }
 
-            Speakers.ReplaceRange(actualSpeakers);
-
             State = LevelState.Playing;
+            Speakers.ReplaceRange(actualSpeakers);
         }
     }
 }

@@ -16,6 +16,7 @@
     <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
     <PackageReference Include="Refractored.MvvmHelpers" Version="1.6.2" />
     <PackageReference Include="Xamarin.CommunityToolkit" Version="1.2.0" />
+    <PackageReference Include="Com.Airbnb.Xamarin.Forms.Lottie" Version="4.0.10" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Views\" />
@@ -24,6 +25,7 @@
     <None Remove="Models\" />
     <None Remove="Refractored.MvvmHelpers" />
     <None Remove="Xamarin.CommunityToolkit" />
+    <None Remove="Com.Airbnb.Xamarin.Forms.Lottie" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\" />

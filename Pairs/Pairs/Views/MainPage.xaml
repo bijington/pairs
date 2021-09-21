@@ -4,11 +4,12 @@
              xmlns:toolkit="http://xamarin.com/schemas/2020/toolkit"
              xmlns:models="clr-namespace:Pairs.Models"
              xmlns:viewModels="clr-namespace:Pairs.ViewModels"
+             xmlns:lottie="clr-namespace:Lottie.Forms;assembly=Lottie.Forms"
              x:Class="Pairs.Views.MainPage"
              x:DataType="viewModels:MainPageViewModel"
              BackgroundColor="{StaticResource Color01}">
     <ContentPage.BindingContext>
-        <viewModels:MainPageViewModel />
+        <viewModels:MainPageViewModel PropertyChanged="MainPageViewModel_PropertyChanged"/>
     </ContentPage.BindingContext>
     <ContentPage.Resources>
         <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
@@ -33,6 +34,13 @@
     </ContentPage.Resources>
 
     <Grid RowDefinitions="80,*">
+        <lottie:AnimationView Animation="background.json"
+                              AnimationSource="AssetOrBundle"
+                              RepeatMode="Infinite"
+                              Grid.RowSpan="2"
+                              VerticalOptions="FillAndExpand"
+                              HorizontalOptions="FillAndExpand" />
+
         <Label Text="{Binding GuessedCount}"
                FontSize="Title"
                TextColor="{StaticResource Color03}"
@@ -94,7 +102,7 @@
                VerticalOptions="Center"
                HorizontalOptions="Center"
                WidthRequest="280"
-               HeightRequest="200"
+               HeightRequest="400"
                HasShadow="False">
             <Grid>
                 <Label Text="Well done!"
@@ -103,12 +111,19 @@
                        VerticalOptions="Start"
                        FontSize="Title" />
 
+                <lottie:AnimationView Animation="trophy.json"
+                                      x:Name="TrophyAnimation"
+                                      AnimationSource="AssetOrBundle"
+                                      AutoPlay="False"
+                                      VerticalOptions="FillAndExpand"
+                                      HorizontalOptions="FillAndExpand" />
+
                 <Polygon Points="0,0 80,40 0,80"
                          Fill="#2A9D8F"
                          WidthRequest="100"
                          HeightRequest="100"
                          HorizontalOptions="Center"
-                         VerticalOptions="Center">
+                         VerticalOptions="End">
                     <Polygon.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding PlayCommand}" />
                     </Polygon.GestureRecognizers>

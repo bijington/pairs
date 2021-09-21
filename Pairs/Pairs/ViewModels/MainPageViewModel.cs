@@ -7,7 +7,6 @@ using MvvmHelpers;
 using Pairs.Data;
 using Pairs.Models;
 using Xamarin.CommunityToolkit.ObjectModel;
-using Xamarin.CommunityToolkit.UI.Views;
 
 namespace Pairs.ViewModels
 {
@@ -76,7 +75,7 @@ namespace Pairs.ViewModels
             }
         }
 
-        public async Task LoadAsync()
+        private async Task LoadAsync()
         {
             var speakerRepository = new SpeakerRepository();
 

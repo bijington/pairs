@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Pairs.ViewModels;
 using Xamarin.Forms;
 
 namespace Pairs.Views
@@ -13,6 +8,15 @@ namespace Pairs.Views
         public MainPage()
         {
             InitializeComponent();
+        }
+
+        void MainPageViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(MainPageViewModel.State) &&
+                ((MainPageViewModel)BindingContext).State == Models.LevelState.Complete)
+            {
+                TrophyAnimation.PlayAnimation();
+            }
         }
     }
 }

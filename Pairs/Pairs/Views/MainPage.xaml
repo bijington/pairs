@@ -40,15 +40,6 @@
                VerticalOptions="End"
                Margin="0,0,25,0" />
 
-        <Label Text="Well done!"
-               TextColor="White"
-               HorizontalOptions="Center"
-               VerticalOptions="Center"
-               Grid.RowSpan="2"
-               Margin="0,-100,0,0"
-               FontSize="Title"
-               IsVisible="{Binding State, Converter={StaticResource IsLevelCompleteConverter}}" />
-
         <Polygon Points="0,0 80,40 0,80"
                  Fill="#2A9D8F"
                  WidthRequest="100"
@@ -95,6 +86,36 @@
                 </DataTemplate>
             </BindableLayout.ItemTemplate>
         </FlexLayout>
+
+        <Frame IsVisible="{Binding State, Converter={StaticResource IsLevelCompleteConverter}}"
+               BackgroundColor="Black"
+               CornerRadius="10"
+               Grid.RowSpan="2"
+               VerticalOptions="Center"
+               HorizontalOptions="Center"
+               WidthRequest="280"
+               HeightRequest="200"
+               HasShadow="False">
+            <Grid>
+                <Label Text="Well done!"
+                       TextColor="White"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Start"
+                       FontSize="Title" />
+
+                <Polygon Points="0,0 80,40 0,80"
+                         Fill="#2A9D8F"
+                         WidthRequest="100"
+                         HeightRequest="100"
+                         HorizontalOptions="Center"
+                         VerticalOptions="Center">
+                    <Polygon.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding PlayCommand}" />
+                    </Polygon.GestureRecognizers>
+                </Polygon>
+            </Grid>
+        </Frame>
+
     </Grid>
 
 </ContentPage>

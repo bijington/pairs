@@ -4,7 +4,7 @@
              xmlns:toolkit="http://xamarin.com/schemas/2020/toolkit"
              xmlns:models="clr-namespace:Pairs.Models"
              xmlns:viewModels="clr-namespace:Pairs.ViewModels"
-             xmlns:lottie="clr-namespace:Lottie.Forms;assembly=Lottie.Forms" xmlns:behaviors="clr-namespace:Pairs.Behaviors"
+             xmlns:lottie="clr-namespace:Lottie.Forms;assembly=Lottie.Forms" xmlns:behaviors="clr-namespace:Pairs.Behaviors" xmlns:effects="clr-namespace:Pairs.Effects"
              x:Class="Pairs.Views.MainPage"
              x:DataType="viewModels:MainPageViewModel"
              BackgroundColor="{StaticResource Color01}">
@@ -119,6 +119,13 @@
                     <Grid WidthRequest="80"
                           HeightRequest="80"
                           Margin="5">
+                        <Grid.Effects>
+                            <effects:ParticleEffect Image="star"
+                                                    NumberOfParticles="40"
+                                                    LifeTime="0.3"
+                                                    Scale="0.5"
+                                                    Speed="0.3" />
+                        </Grid.Effects>
                         <Frame IsClippedToBounds="True"
                                Padding="0"
                                HasShadow="False"

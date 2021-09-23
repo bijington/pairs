@@ -68,6 +68,7 @@
     <None Include="Entitlements.plist" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Effects\ParticleEffect.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
@@ -113,6 +114,11 @@
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Icon20.png">
       <Visible>false</Visible>
     </ImageAsset>
+    <ImageAsset Include="Assets.xcassets\Color.colorset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\star.imageset\Contents.json" />
+    <ImageAsset Include="Assets.xcassets\star.imageset\star_1x.png" />
+    <ImageAsset Include="Assets.xcassets\star.imageset\star_2x.png" />
+    <ImageAsset Include="Assets.xcassets\star.imageset\star_3x.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -139,5 +145,9 @@
   <ItemGroup>
     <BundleResource Include="background.json" />
     <BundleResource Include="trophy.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Effects\" />
+    <Folder Include="Assets.xcassets\star.imageset\" />
   </ItemGroup>
 </Project>

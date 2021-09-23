@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using Pairs.Effects;
 using Pairs.ViewModels;
 using Xamarin.Forms;
 
@@ -51,15 +53,20 @@ namespace Pairs.Behaviors
                 var animation = new Animation();
 
                 animation.Add(0.0, 0.2, new Animation(v => frame.Scale = v, 1, 0.9));
-                animation.Add(0.2, 0.9, new Animation(v => frame.Scale = v, 0.9, 1.2));
-                animation.Add(0.9, 1.0, new Animation(v => frame.Scale = v, 1.2, 1));
+                animation.Add(0.2, 0.75, new Animation(v => frame.Scale = v, 0.9, 1.2));
+                animation.Add(0.75, 1.0, new Animation(v => frame.Scale = v, 1.2, 0));
 
                 animation.Commit(
                     frame,
                     "SuccessfulMatch",
                     length: 500,
                     easing: Easing.SpringIn,
-                    finished: (v, f) => frame.IsVisible = false);
+                    finished: async (v, f) =>
+                    {
+                        frame.Parent.Effects.OfType<ParticleEffect>().First().RaiseEmit();
+
+                        frame.IsVisible = false;
+                    });
             }
         }
     }

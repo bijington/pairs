@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using MvvmHelpers;
@@ -13,6 +14,7 @@ namespace Pairs.ViewModels
     public class MainPageViewModel : BaseViewModel
     {
         private SpeakerViewModel currentSpeaker;
+        private CancellationTokenSource cancelAnimationTokenSource;
         private int guessedCount;
         private LevelState state;
 
@@ -30,6 +32,8 @@ namespace Pairs.ViewModels
 
         public ICommand PlayCommand { get; }
 
+        public MvvmHelpers.ObservableRangeCollection<SpeakerViewModel> GuessedSpeakers { get; } = new MvvmHelpers.ObservableRangeCollection<SpeakerViewModel>();
+
         public MvvmHelpers.ObservableRangeCollection<SpeakerViewModel> Speakers { get; } = new MvvmHelpers.ObservableRangeCollection<SpeakerViewModel>();
 
         public ICommand SelectTileCommand { get; }
@@ -37,22 +41,46 @@ namespace Pairs.ViewModels
         public MainPageViewModel()
         {
             PlayCommand = new AsyncCommand(LoadAsync, allowsMultipleExecutions: false);
-            SelectTileCommand = new AsyncCommand<SpeakerViewModel>(OnSelectTile, allowsMultipleExecutions: false);
+            SelectTileCommand = new AsyncCommand<SpeakerViewModel>(OnSelectTile, allowsMultipleExecutions: true);
         }
 
         private async Task OnSelectTile(SpeakerViewModel speaker)
         {
+            cancelAnimationTokenSource?.Cancel();
+
             speaker.IsSelected = !speaker.IsSelected;
 
             if (this.currentSpeaker is not null)
             {
-                await Task.Delay(500);
-
                 if (this.currentSpeaker.Name == speaker.Name &&
                     ReferenceEquals(this.currentSpeaker, speaker) == false)
                 {
                     this.currentSpeaker.IsGuessed = true;
                     speaker.IsGuessed = true;
+                }
+
+                cancelAnimationTokenSource = new CancellationTokenSource();
+
+                try
+                {
+                    await Task.Delay(500, cancelAnimationTokenSource.Token);
+                }
+                catch (OperationCanceledException)
+                {
+
+                }
+                finally
+                {
+                    cancelAnimationTokenSource = null;
+                }
+
+                if (this.currentSpeaker.Name == speaker.Name &&
+                    ReferenceEquals(this.currentSpeaker, speaker) == false)
+                {
+                    if (GuessedSpeakers.Count < 5)
+                    {
+                        GuessedSpeakers.Add(speaker);
+                    }
 
                     this.currentSpeaker.IsSelected = false;
                     this.currentSpeaker = null;

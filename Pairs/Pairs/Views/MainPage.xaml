@@ -4,7 +4,7 @@
              xmlns:toolkit="http://xamarin.com/schemas/2020/toolkit"
              xmlns:models="clr-namespace:Pairs.Models"
              xmlns:viewModels="clr-namespace:Pairs.ViewModels"
-             xmlns:lottie="clr-namespace:Lottie.Forms;assembly=Lottie.Forms"
+             xmlns:lottie="clr-namespace:Lottie.Forms;assembly=Lottie.Forms" xmlns:behaviors="clr-namespace:Pairs.Behaviors"
              x:Class="Pairs.Views.MainPage"
              x:DataType="viewModels:MainPageViewModel"
              BackgroundColor="{StaticResource Color01}">
@@ -31,6 +31,29 @@
                 <models:LevelState>Playing</models:LevelState>
             </toolkit:EnumToBoolConverter.TrueValues>
         </toolkit:EnumToBoolConverter>
+        <ResourceDictionary>
+            <Style x:Key="BorderFrameStyle" TargetType="Frame">
+                <Setter Property="Margin" Value="-25,0,0,0" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="BackgroundColor" Value="{StaticResource Color01}" />
+                <Setter Property="CornerRadius" Value="15" />
+                <Setter Property="HasShadow" Value="False" />
+                <Setter Property="HeightRequest" Value="30" />
+                <Setter Property="VerticalOptions" Value="Start" />
+                <Setter Property="WidthRequest" Value="30" />
+            </Style>
+            <Style x:Key="ContentFrameStyle" TargetType="Frame">
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="BackgroundColor" Value="{StaticResource Color01}" />
+                <Setter Property="CornerRadius" Value="12" />
+                <Setter Property="HasShadow" Value="False" />
+                <Setter Property="HeightRequest" Value="24" />
+                <Setter Property="VerticalOptions" Value="Center" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+                <Setter Property="IsClippedToBounds" Value="True" />
+                <Setter Property="WidthRequest" Value="24" />
+            </Style>
+        </ResourceDictionary>
     </ContentPage.Resources>
 
     <Grid RowDefinitions="80,*">
@@ -41,18 +64,40 @@
                               VerticalOptions="FillAndExpand"
                               HorizontalOptions="FillAndExpand" />
 
-        <Label Text="{Binding GuessedCount}"
-               FontSize="Title"
-               TextColor="{StaticResource Color03}"
-               HorizontalOptions="End"
-               VerticalOptions="End"
-               Margin="0,0,25,0" />
+        <Grid ColumnDefinitions="*,Auto">
+            <StackLayout BindableLayout.ItemsSource="{Binding GuessedSpeakers}"
+                         HorizontalOptions="EndAndExpand"
+                         Orientation="Horizontal"
+                         VerticalOptions="End"
+                         Grid.Column="0">
+
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="viewModels:SpeakerViewModel">
+                        <Frame Style="{StaticResource BorderFrameStyle}">
+                            <Frame Style="{StaticResource ContentFrameStyle}"
+                                   BackgroundColor="{StaticResource Color02}">
+                            </Frame>
+                        </Frame>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+
+            </StackLayout>
+
+            <Label Text="{Binding GuessedCount}"
+                   FontSize="Title"
+                   TextColor="{StaticResource Color02}"
+                   HorizontalOptions="End"
+                   VerticalOptions="End"
+                   Margin="0,0,25,0"
+                   Grid.Column="1" />
+        </Grid>
+        
 
         <Polygon Points="0,0 80,40 0,80"
                  Fill="#2A9D8F"
-                 WidthRequest="100"
+                 WidthRequest="80"
                  Grid.RowSpan="2"
-                 HeightRequest="100"
+                 HeightRequest="80"
                  HorizontalOptions="Center"
                  VerticalOptions="Center"
                  IsVisible="{Binding State, Converter={StaticResource IsNotPlayingConverter}}">
@@ -78,8 +123,10 @@
                                Padding="0"
                                HasShadow="False"
                                CornerRadius="40"
-                               IsVisible="{Binding IsGuessed, Converter={StaticResource InvertedBoolConverter}}"
                                BackgroundColor="{StaticResource Color02}">
+                            <Frame.Behaviors>
+                                <behaviors:SpeakerStateBehavior />
+                            </Frame.Behaviors>
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding Path=SelectTileCommand, Source={RelativeSource AncestorType={x:Type viewModels:MainPageViewModel}}}"
                                                       CommandParameter="{Binding}" />
@@ -87,7 +134,7 @@
 
                             <Image HorizontalOptions="Fill"
                                    VerticalOptions="Fill"
-                                   IsVisible="{Binding IsSelected}"
+                                   IsVisible="False"
                                    Source="{Binding ProfileImageUrl}" />
                         </Frame>
                     </Grid>
@@ -118,10 +165,10 @@
                                       VerticalOptions="FillAndExpand"
                                       HorizontalOptions="FillAndExpand" />
 
-                <Polygon Points="0,0 80,40 0,80"
+                <Polygon Points="0,0 40,20 0,40"
                          Fill="#2A9D8F"
-                         WidthRequest="100"
-                         HeightRequest="100"
+                         WidthRequest="40"
+                         HeightRequest="40"
                          HorizontalOptions="Center"
                          VerticalOptions="End">
                     <Polygon.GestureRecognizers>

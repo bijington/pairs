@@ -45,7 +45,6 @@ namespace Pairs.iOS.Effects
                 return;
             }
 
-            //var mode = effect.Mode;
             var lifeTime = effect.LifeTime;
             var numberOfItems = effect.NumberOfParticles;
             var scale = effect.Scale;
@@ -76,18 +75,15 @@ namespace Pairs.iOS.Effects
 
             control.Layer.AddSublayer(emitterLayer);
 
-            //if (mode == EmitMode.OneShot)
+            Task.Run(async () =>
             {
-                Task.Run(async () =>
-                {
-                    await Task.Delay(100).ConfigureAwait(false);
+                await Task.Delay(100).ConfigureAwait(false);
 
-                    Device.BeginInvokeOnMainThread(() =>
-                    {
-                        emitterLayer.SetValueForKeyPath(NSNumber.FromInt32(0), new NSString("emitterCells.pEmitter.birthRate"));
-                    });
+                Device.BeginInvokeOnMainThread(() =>
+                {
+                    emitterLayer.SetValueForKeyPath(NSNumber.FromInt32(0), new NSString("emitterCells.pEmitter.birthRate"));
                 });
-            }
+            });
         }
     }
 }

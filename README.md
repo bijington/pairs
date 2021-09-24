@@ -8,4 +8,8 @@ A `Xamarin.Forms` based application to show of some key techniques to make an ap
 
 ## Particle Effects
 
-Inspired by this blog post: https://www.xamboy.com/2019/01/30/particle-system-in-xamarin-forms/
+Inspired by: https://www.xamboy.com/2019/01/30/particle-system-in-xamarin-forms/
+
+## Score counter
+
+Inspired by: https://kymphillpotts.com/avatar-groups.html

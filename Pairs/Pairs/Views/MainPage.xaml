@@ -4,7 +4,7 @@
              xmlns:toolkit="http://xamarin.com/schemas/2020/toolkit"
              xmlns:models="clr-namespace:Pairs.Models"
              xmlns:viewModels="clr-namespace:Pairs.ViewModels"
-             xmlns:lottie="clr-namespace:Lottie.Forms;assembly=Lottie.Forms" xmlns:behaviors="clr-namespace:Pairs.Behaviors" xmlns:effects="clr-namespace:Pairs.Effects"
+             xmlns:lottie="clr-namespace:Lottie.Forms;assembly=Lottie.Forms" xmlns:behaviors="clr-namespace:Pairs.Behaviors" xmlns:effects="clr-namespace:Pairs.Effects" xmlns:converters="clr-namespace:Pairs.Converters"
              x:Class="Pairs.Views.MainPage"
              x:DataType="viewModels:MainPageViewModel"
              BackgroundColor="{StaticResource Color01}">
@@ -13,6 +13,7 @@
     </ContentPage.BindingContext>
     <ContentPage.Resources>
         <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        <converters:StringToPathGeometryConverter x:Key="StringToPathGeometryConverter" />
         <toolkit:EnumToBoolConverter x:Key="IsLevelCompleteConverter">
             <toolkit:EnumToBoolConverter.TrueValues>
                 <models:LevelState>Complete</models:LevelState>
@@ -65,14 +66,14 @@
                               HorizontalOptions="FillAndExpand" />
 
         <Grid ColumnDefinitions="*,Auto">
-            <StackLayout BindableLayout.ItemsSource="{Binding GuessedSpeakers}"
+            <StackLayout BindableLayout.ItemsSource="{Binding GuessedTiles}"
                          HorizontalOptions="EndAndExpand"
                          Orientation="Horizontal"
                          VerticalOptions="End"
                          Grid.Column="0">
 
                 <BindableLayout.ItemTemplate>
-                    <DataTemplate x:DataType="viewModels:SpeakerViewModel">
+                    <DataTemplate x:DataType="viewModels:TileViewModel">
                         <Frame Style="{StaticResource BorderFrameStyle}">
                             <Frame Style="{StaticResource ContentFrameStyle}"
                                    BackgroundColor="{StaticResource Color02}">
@@ -106,7 +107,7 @@
             </Polygon.GestureRecognizers>
         </Polygon>
 
-        <FlexLayout BindableLayout.ItemsSource="{Binding Speakers}"
+        <FlexLayout BindableLayout.ItemsSource="{Binding Tiles}"
                     Direction="Row"
                     Wrap="Wrap"
                     JustifyContent="Center"
@@ -115,7 +116,7 @@
                     IsVisible="{Binding State, Converter={StaticResource IsPlayingConverter}}"
                     Grid.RowSpan="2">
             <BindableLayout.ItemTemplate>
-                <DataTemplate x:DataType="viewModels:SpeakerViewModel">
+                <DataTemplate x:DataType="viewModels:TileViewModel">
                     <Grid WidthRequest="80"
                           HeightRequest="80"
                           Margin="5">
@@ -132,17 +133,28 @@
                                CornerRadius="40"
                                BackgroundColor="{StaticResource Color02}">
                             <Frame.Behaviors>
-                                <behaviors:SpeakerStateBehavior />
+                                <behaviors:TileStateBehavior />
                             </Frame.Behaviors>
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding Path=SelectTileCommand, Source={RelativeSource AncestorType={x:Type viewModels:MainPageViewModel}}}"
                                                       CommandParameter="{Binding}" />
                             </Frame.GestureRecognizers>
 
-                            <Image HorizontalOptions="Fill"
-                                   VerticalOptions="Fill"
-                                   IsVisible="False"
-                                   Source="{Binding ProfileImageUrl}" />
+                            <Path Fill="#264653"
+                                     Data="{Binding Path, Converter={StaticResource StringToPathGeometryConverter}}"
+                                     HorizontalOptions="Center"
+                                     VerticalOptions="Center"
+                                     IsVisible="False"
+                                     WidthRequest="50"
+                                     HeightRequest="50" />
+
+                            <!--<Polygon Fill="#264653"
+                                     Points="{Binding Path, Converter={StaticResource StringToPathGeometryConverter}}"
+                                     HorizontalOptions="Center"
+                                     VerticalOptions="Center"
+                                     IsVisible="False"
+                                     WidthRequest="50"
+                                     HeightRequest="50" />-->
                         </Frame>
                     </Grid>
                 </DataTemplate>

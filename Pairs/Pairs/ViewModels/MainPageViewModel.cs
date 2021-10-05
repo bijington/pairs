@@ -13,7 +13,7 @@ namespace Pairs.ViewModels
 {
     public class MainPageViewModel : BaseViewModel
     {
-        private SpeakerViewModel currentSpeaker;
+        private TileViewModel currentTile;
         private CancellationTokenSource cancelAnimationTokenSource;
         private int guessedCount;
         private LevelState state;
@@ -32,113 +32,118 @@ namespace Pairs.ViewModels
 
         public ICommand PlayCommand { get; }
 
-        public MvvmHelpers.ObservableRangeCollection<SpeakerViewModel> GuessedSpeakers { get; } = new MvvmHelpers.ObservableRangeCollection<SpeakerViewModel>();
+        public MvvmHelpers.ObservableRangeCollection<TileViewModel> GuessedTiles { get; } = new MvvmHelpers.ObservableRangeCollection<TileViewModel>();
 
-        public MvvmHelpers.ObservableRangeCollection<SpeakerViewModel> Speakers { get; } = new MvvmHelpers.ObservableRangeCollection<SpeakerViewModel>();
+        public MvvmHelpers.ObservableRangeCollection<TileViewModel> Tiles { get; } = new MvvmHelpers.ObservableRangeCollection<TileViewModel>();
 
         public ICommand SelectTileCommand { get; }
 
         public MainPageViewModel()
         {
             PlayCommand = new AsyncCommand(LoadAsync, allowsMultipleExecutions: false);
-            SelectTileCommand = new AsyncCommand<SpeakerViewModel>(OnSelectTile, allowsMultipleExecutions: true);
+            SelectTileCommand = new AsyncCommand<TileViewModel>(OnSelectTile, allowsMultipleExecutions: true);
         }
 
-        private async Task OnSelectTile(SpeakerViewModel speaker)
+        private async Task OnSelectTile(TileViewModel tile)
         {
             cancelAnimationTokenSource?.Cancel();
 
-            speaker.IsSelected = !speaker.IsSelected;
+            tile.IsSelected = !tile.IsSelected;
 
-            if (this.currentSpeaker is not null)
+            if (this.currentTile is not null)
             {
-                if (this.currentSpeaker.Name == speaker.Name &&
-                    ReferenceEquals(this.currentSpeaker, speaker) == false)
+                if (this.currentTile.Path == tile.Path &&
+                    ReferenceEquals(this.currentTile, tile) == false)
                 {
-                    this.currentSpeaker.IsGuessed = true;
-                    speaker.IsGuessed = true;
+                    this.currentTile.IsGuessed = true;
+                    tile.IsGuessed = true;
                 }
 
-                cancelAnimationTokenSource = new CancellationTokenSource();
+                await ShowSelectionAsync();
 
-                try
+                if (this.currentTile.Path == tile.Path &&
+                    ReferenceEquals(this.currentTile, tile) == false)
                 {
-                    await Task.Delay(500, cancelAnimationTokenSource.Token);
-                }
-                catch (OperationCanceledException)
-                {
-
-                }
-                finally
-                {
-                    cancelAnimationTokenSource = null;
-                }
-
-                if (this.currentSpeaker.Name == speaker.Name &&
-                    ReferenceEquals(this.currentSpeaker, speaker) == false)
-                {
-                    if (GuessedSpeakers.Count < 5)
+                    if (GuessedTiles.Count < 5)
                     {
-                        GuessedSpeakers.Add(speaker);
+                        GuessedTiles.Add(tile);
                     }
 
-                    this.currentSpeaker.IsSelected = false;
-                    this.currentSpeaker = null;
+                    this.currentTile.IsSelected = false;
+                    this.currentTile = null;
 
                     GuessedCount++;
                 }
                 else
                 {
-                    this.currentSpeaker.IsSelected = false;
+                    this.currentTile.IsSelected = false;
                 }
 
-                speaker.IsSelected = false;
+                tile.IsSelected = false;
             }
 
-            this.currentSpeaker = speaker.IsSelected ? speaker : null;
+            this.currentTile = tile.IsSelected ? tile : null;
 
-            if (Speakers.All(s => s.IsGuessed))
+            if (Tiles.All(s => s.IsGuessed))
             {
                 State = LevelState.Complete;
             }
         }
 
+        private async Task ShowSelectionAsync()
+        {
+            cancelAnimationTokenSource = new CancellationTokenSource();
+
+            try
+            {
+                await Task.Delay(500, cancelAnimationTokenSource.Token);
+            }
+            catch (OperationCanceledException)
+            {
+
+            }
+            finally
+            {
+                cancelAnimationTokenSource = null;
+            }
+        }
+
         private async Task LoadAsync()
         {
-            var speakerRepository = new SpeakerRepository();
+            var shapeRepository = new ShapeRepository();
 
-            var allSpeakers = await speakerRepository.ListAsync();
+            var allShapes = await shapeRepository.ListAsync();
 
             var random = new Random();
 
-            const int gridSize = 4;
+            const int gridSize = 8;
             var requiredSpeakerCount = gridSize / 2;
 
-            var actualSpeakers = new List<SpeakerViewModel>(gridSize);
+            var actualTiles = new List<TileViewModel>(gridSize);
 
             for (int i = 0; i < requiredSpeakerCount; i++)
             {
-                var speakerIndex = random.Next(allSpeakers.Count);
-                var speaker = allSpeakers[speakerIndex];
-                allSpeakers.RemoveAt(speakerIndex);
+                var shapeIndex = random.Next(allShapes.Count);
+                var shape = allShapes[shapeIndex];
+                allShapes.RemoveAt(shapeIndex);
 
-                actualSpeakers.Add(new SpeakerViewModel(speaker));
-                actualSpeakers.Add(new SpeakerViewModel(speaker));
+                actualTiles.Add(new TileViewModel(shape));
+                actualTiles.Add(new TileViewModel(shape));
             }
 
-            int n = actualSpeakers.Count;
+            int n = actualTiles.Count;
 
             while (n > 1)
             {
                 n--;
                 int k = random.Next(n + 1);
-                var value = actualSpeakers[k];
-                actualSpeakers[k] = actualSpeakers[n];
-                actualSpeakers[n] = value;
+                var value = actualTiles[k];
+                actualTiles[k] = actualTiles[n];
+                actualTiles[n] = value;
             }
 
             State = LevelState.Playing;
-            Speakers.ReplaceRange(actualSpeakers);
+            Tiles.ReplaceRange(actualTiles);
         }
     }
 }

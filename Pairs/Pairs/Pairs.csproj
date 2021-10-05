@@ -28,6 +28,7 @@
     <None Remove="Com.Airbnb.Xamarin.Forms.Lottie" />
     <None Remove="Behaviors\" />
     <None Remove="Effects\" />
+    <None Remove="Converters\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\" />
@@ -36,5 +37,6 @@
     <Folder Include="Models\" />
     <Folder Include="Behaviors\" />
     <Folder Include="Effects\" />
+    <Folder Include="Converters\" />
   </ItemGroup>
 </Project>

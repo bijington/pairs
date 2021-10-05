@@ -3,14 +3,13 @@ using Pairs.Models;
 
 namespace Pairs.ViewModels
 {
-    public class SpeakerViewModel : BaseViewModel
+    public class TileViewModel : BaseViewModel
     {
         private bool isGuessed;
         private bool isSelected;
-        private readonly Speaker speaker;
+        private readonly Shape shape;
 
-        public string Name => speaker.Name;
-        public string ProfileImageUrl => speaker.ProfileImageUrl;
+        public string Path => shape.Path;
 
         public bool IsGuessed
         {
@@ -24,9 +23,9 @@ namespace Pairs.ViewModels
             set => SetProperty(ref isSelected, value);
         }
 
-        public SpeakerViewModel(Speaker speaker)
+        public TileViewModel(Shape shape)
         {
-            this.speaker = speaker;
+            this.shape = shape;
         }
     }
 }

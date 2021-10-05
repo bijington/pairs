@@ -6,10 +6,10 @@ using Xamarin.Forms;
 
 namespace Pairs.Behaviors
 {
-    public class SpeakerStateBehavior : Behavior<Frame>
+    public class TileStateBehavior : Behavior<Frame>
     {
         private Frame frame;
-        private SpeakerViewModel speaker;
+        private TileViewModel tileViewModel;
 
         protected override void OnAttachedTo(Frame bindable)
         {
@@ -25,30 +25,30 @@ namespace Pairs.Behaviors
 
             frame.BindingContextChanged -= OnBindingContextChanged;
 
-            if (speaker is not null)
+            if (tileViewModel is not null)
             {
-                speaker.PropertyChanged -= OnSpeakerPropertyChanged;
+                tileViewModel.PropertyChanged -= OnTileViewModelPropertyChanged;
             }
         }
 
         private void OnBindingContextChanged(object sender, EventArgs e)
         {
-            if (frame.BindingContext is SpeakerViewModel speakerViewModel)
+            if (frame.BindingContext is TileViewModel tile)
             {
-                speaker = speakerViewModel;
-                speaker.PropertyChanged += OnSpeakerPropertyChanged;
+                tileViewModel = tile;
+                tileViewModel.PropertyChanged += OnTileViewModelPropertyChanged;
             }
         }
 
-        private async void OnSpeakerPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private async void OnTileViewModelPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(SpeakerViewModel.IsSelected))
+            if (e.PropertyName == nameof(TileViewModel.IsSelected))
             {
                 await frame.RotateXTo(90, 100, Easing.BounceIn);
-                frame.Content.IsVisible = speaker.IsSelected;
+                frame.Content.IsVisible = tileViewModel.IsSelected;
                 await frame.RotateXTo(0, 100, Easing.BounceIn);
             }
-            else if (e.PropertyName == nameof(SpeakerViewModel.IsGuessed))
+            else if (e.PropertyName == nameof(TileViewModel.IsGuessed))
             {
                 var animation = new Animation();
 
@@ -61,7 +61,7 @@ namespace Pairs.Behaviors
                     "SuccessfulMatch",
                     length: 500,
                     easing: Easing.SpringIn,
-                    finished: async (v, f) =>
+                    finished: (v, f) =>
                     {
                         frame.Parent.Effects.OfType<ParticleEffect>().First().RaiseEmit();
 

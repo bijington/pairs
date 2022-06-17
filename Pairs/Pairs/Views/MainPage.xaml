@@ -123,34 +123,33 @@
                           HeightRequest="80"
                           Margin="5">
                         <Grid.GestureRecognizers>
-                            <TapGestureRecognizer
-                                Command="{Binding Path=SelectTileCommand, Source={RelativeSource AncestorType={x:Type viewModels:MainPageViewModel}}}"
-                                CommandParameter="{Binding}" />
+                            <TapGestureRecognizer Command="{Binding Path=SelectTileCommand, Source={RelativeSource AncestorType={x:Type viewModels:MainPageViewModel}}}"
+                                                  CommandParameter="{Binding}" />
                         </Grid.GestureRecognizers>
-                        <!--<Grid.Effects>
-                            <effects:ParticleEffect Image="star"
-                                                    NumberOfParticles="40"
-                                                    LifeTime="0.3"
-                                                    Scale="0.5"
-                                                    Speed="0.3" />
-                        </Grid.Effects>-->
+                        <Grid.Behaviors>
+                            <behaviors:ParticleEmitterBehavior Image="star"
+                                                               x:Name="ParticleEmitter"
+                                                               NumberOfParticles="40"
+                                                               LifeTime="0.3"
+                                                               Scale="0.5"
+                                                               Speed="0.3" />
+                        </Grid.Behaviors>
                         <Frame IsClippedToBounds="True"
                                Padding="0"
                                HasShadow="False"
                                CornerRadius="40"
                                BackgroundColor="{StaticResource Color02}">
                             <Frame.Behaviors>
-                                <behaviors:TileStateBehavior />
+                                <behaviors:TileStateBehavior EmitterBehavior="{Binding Source={x:Reference ParticleEmitter}}" />
                             </Frame.Behaviors>
 
-                            <Path
-                                Fill="#264653"
-                                Data="{Binding Path, Converter={StaticResource StringToPathGeometryConverter}}"
-                                HorizontalOptions="Center"
-                                VerticalOptions="Center"
-                                IsVisible="False"
-                                WidthRequest="50"
-                                HeightRequest="50" />
+                            <Path Fill="#264653"
+                                  Data="{Binding Path, Converter={StaticResource StringToPathGeometryConverter}}"
+                                  HorizontalOptions="Center"
+                                  VerticalOptions="Center"
+                                  IsVisible="False"
+                                  WidthRequest="50"
+                                  HeightRequest="50" />
                         </Frame>
                     </Grid>
                 </DataTemplate>

@@ -96,7 +96,7 @@ public partial class MainPageViewModel : ObservableObject
 
         var random = new Random();
 
-        const int gridSize = 8;
+        const int gridSize = 20;
         var requiredSpeakerCount = gridSize / 2;
 
         var actualTiles = new List<TileViewModel>(gridSize);

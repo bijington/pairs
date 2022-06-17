@@ -7,6 +7,15 @@ public class TileStateBehavior : Behavior<Frame>
     private Frame frame;
     private TileViewModel tileViewModel;
 
+    public static readonly BindableProperty EmitterBehaviorProperty =
+         BindableProperty.Create(nameof(EmitterBehavior), typeof(ParticleEmitterBehavior), typeof(TileStateBehavior), default);
+
+    public ParticleEmitterBehavior EmitterBehavior
+    {
+        get => (ParticleEmitterBehavior)GetValue(EmitterBehaviorProperty);
+        set => SetValue(EmitterBehaviorProperty, value);
+    }
+
     protected override void OnAttachedTo(Frame bindable)
     {
         base.OnAttachedTo(bindable);
@@ -59,7 +68,7 @@ public class TileStateBehavior : Behavior<Frame>
                 easing: Easing.SpringIn,
                 finished: (v, f) =>
                 {
-                    //frame.Parent.Effects.OfType<ParticleEffect>().First().RaiseEmit();
+                    EmitterBehavior.Emit();
 
                     frame.IsVisible = false;
                 });

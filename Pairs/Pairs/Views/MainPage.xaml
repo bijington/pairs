@@ -72,7 +72,7 @@
             <StackLayout BindableLayout.ItemsSource="{Binding GuessedTiles}"
                          HorizontalOptions="EndAndExpand"
                          Orientation="Horizontal"
-                         VerticalOptions="End"
+                         VerticalOptions="Center"
                          Grid.Column="0">
 
                 <BindableLayout.ItemTemplate>
@@ -91,7 +91,7 @@
                    FontSize="Title"
                    TextColor="{StaticResource Color02}"
                    HorizontalOptions="End"
-                   VerticalOptions="End"
+                   VerticalOptions="Center"
                    Margin="0,0,25,0"
                    Grid.Column="1" />
         </Grid>

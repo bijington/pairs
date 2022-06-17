@@ -1,31 +1,30 @@
-﻿using MvvmHelpers;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Pairs.Models;
 
-namespace Pairs.ViewModels
+namespace Pairs.ViewModels;
+
+public class TileViewModel : ObservableObject
 {
-    public class TileViewModel : BaseViewModel
+    private bool isGuessed;
+    private bool isSelected;
+    private readonly Shape shape;
+
+    public string Path => shape.Path;
+
+    public bool IsGuessed
     {
-        private bool isGuessed;
-        private bool isSelected;
-        private readonly Shape shape;
+        get => isGuessed;
+        set => SetProperty(ref isGuessed, value);
+    }
 
-        public string Path => shape.Path;
+    public bool IsSelected
+    {
+        get => isSelected;
+        set => SetProperty(ref isSelected, value);
+    }
 
-        public bool IsGuessed
-        {
-            get => isGuessed;
-            set => SetProperty(ref isGuessed, value);
-        }
-
-        public bool IsSelected
-        {
-            get => isSelected;
-            set => SetProperty(ref isSelected, value);
-        }
-
-        public TileViewModel(Shape shape)
-        {
-            this.shape = shape;
-        }
+    public TileViewModel(Shape shape)
+    {
+        this.shape = shape;
     }
 }

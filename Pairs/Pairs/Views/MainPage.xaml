@@ -1,18 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:toolkit="http://xamarin.com/schemas/2020/toolkit"
-             xmlns:models="clr-namespace:Pairs.Models"
-             xmlns:viewModels="clr-namespace:Pairs.ViewModels"
-             xmlns:lottie="clr-namespace:Lottie.Forms;assembly=Lottie.Forms" xmlns:behaviors="clr-namespace:Pairs.Behaviors" xmlns:effects="clr-namespace:Pairs.Effects" xmlns:converters="clr-namespace:Pairs.Converters"
-             x:Class="Pairs.Views.MainPage"
-             x:DataType="viewModels:MainPageViewModel"
-             BackgroundColor="{StaticResource Color01}">
-    <ContentPage.BindingContext>
-        <viewModels:MainPageViewModel PropertyChanged="MainPageViewModel_PropertyChanged"/>
-    </ContentPage.BindingContext>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:viewModels="clr-namespace:Pairs.ViewModels"
+    x:Class="Pairs.Views.MainPage"
+    Shell.NavBarIsVisible="False"
+    x:DataType="viewModels:MainPageViewModel"
+    BackgroundColor="{StaticResource Color01}">
+
     <ContentPage.Resources>
-        <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        <!--<toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
         <converters:StringToPathGeometryConverter x:Key="StringToPathGeometryConverter" />
         <toolkit:EnumToBoolConverter x:Key="IsLevelCompleteConverter">
             <toolkit:EnumToBoolConverter.TrueValues>
@@ -31,7 +28,7 @@
                 <models:LevelState>Playing</models:LevelState>
                 <models:LevelState>Playing</models:LevelState>
             </toolkit:EnumToBoolConverter.TrueValues>
-        </toolkit:EnumToBoolConverter>
+        </toolkit:EnumToBoolConverter>-->
         <ResourceDictionary>
             <Style x:Key="BorderFrameStyle" TargetType="Frame">
                 <Setter Property="Margin" Value="-25,0,0,0" />
@@ -58,12 +55,12 @@
     </ContentPage.Resources>
 
     <Grid RowDefinitions="80,*">
-        <lottie:AnimationView Animation="background.json"
+        <!--<lottie:AnimationView Animation="background.json"
                               AnimationSource="AssetOrBundle"
                               RepeatMode="Infinite"
                               Grid.RowSpan="2"
                               VerticalOptions="FillAndExpand"
-                              HorizontalOptions="FillAndExpand" />
+                              HorizontalOptions="FillAndExpand" />-->
 
         <Grid ColumnDefinitions="*,Auto">
             <StackLayout BindableLayout.ItemsSource="{Binding GuessedTiles}"
@@ -120,21 +117,21 @@
                     <Grid WidthRequest="80"
                           HeightRequest="80"
                           Margin="5">
-                        <Grid.Effects>
+                        <!--<Grid.Effects>
                             <effects:ParticleEffect Image="star"
                                                     NumberOfParticles="40"
                                                     LifeTime="0.3"
                                                     Scale="0.5"
                                                     Speed="0.3" />
-                        </Grid.Effects>
+                        </Grid.Effects>-->
                         <Frame IsClippedToBounds="True"
                                Padding="0"
                                HasShadow="False"
                                CornerRadius="40"
                                BackgroundColor="{StaticResource Color02}">
-                            <Frame.Behaviors>
+                            <!--<Frame.Behaviors>
                                 <behaviors:TileStateBehavior />
-                            </Frame.Behaviors>
+                            </Frame.Behaviors>-->
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding Path=SelectTileCommand, Source={RelativeSource AncestorType={x:Type viewModels:MainPageViewModel}}}"
                                                       CommandParameter="{Binding}" />
@@ -177,12 +174,12 @@
                        VerticalOptions="Start"
                        FontSize="Title" />
 
-                <lottie:AnimationView Animation="trophy.json"
+                <!--<lottie:AnimationView Animation="trophy.json"
                                       x:Name="TrophyAnimation"
                                       AnimationSource="AssetOrBundle"
                                       AutoPlay="False"
                                       VerticalOptions="FillAndExpand"
-                                      HorizontalOptions="FillAndExpand" />
+                                      HorizontalOptions="FillAndExpand" />-->
 
                 <Polygon Points="0,0 40,20 0,40"
                          Fill="#2A9D8F"

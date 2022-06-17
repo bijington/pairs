@@ -1,12 +1,11 @@
-﻿namespace Pairs.Models
-{
-    public class Shape
-    {
-        public string Path { get; }
+﻿namespace Pairs.Models;
 
-        public Shape(string path)
-        {
-            Path = path;
-        }
+public class Shape
+{
+    public string Path { get; }
+
+    public Shape(string path)
+    {
+        Path = path;
     }
 }

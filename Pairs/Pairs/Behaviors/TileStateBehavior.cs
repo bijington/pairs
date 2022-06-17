@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Pairs.Effects;
 using Pairs.ViewModels;
 using Xamarin.Forms;
@@ -52,9 +53,9 @@ namespace Pairs.Behaviors
             {
                 var animation = new Animation();
 
-                animation.Add(0.0, 0.2, new Animation(v => frame.Scale = v, 1, 0.9));
-                animation.Add(0.2, 0.75, new Animation(v => frame.Scale = v, 0.9, 1.2));
-                animation.Add(0.75, 1.0, new Animation(v => frame.Scale = v, 1.2, 0));
+                animation.Add(0.00, 0.20, new Animation(v => frame.Scale = v, 1.0, 0.9));
+                animation.Add(0.20, 0.75, new Animation(v => frame.Scale = v, 0.9, 1.2));
+                animation.Add(0.75, 1.00, new Animation(v => frame.Scale = v, 1.2, 0.0));
 
                 animation.Commit(
                     frame,

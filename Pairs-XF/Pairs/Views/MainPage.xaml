@@ -1,17 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-    xmlns:behaviors="clr-namespace:Pairs.Behaviors"
-    xmlns:converters="clr-namespace:Pairs.Converters"
-    xmlns:models="clr-namespace:Pairs.Models"
-    xmlns:viewModels="clr-namespace:Pairs.ViewModels"
-    x:Class="Pairs.Views.MainPage"
-    Shell.NavBarIsVisible="False"
-    x:DataType="viewModels:MainPageViewModel"
-    BackgroundColor="{StaticResource Color01}">
-
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:models="clr-namespace:Pairs.Models"
+             xmlns:viewModels="clr-namespace:Pairs.ViewModels"
+             xmlns:lottie="clr-namespace:Lottie.Forms;assembly=Lottie.Forms" xmlns:behaviors="clr-namespace:Pairs.Behaviors" xmlns:effects="clr-namespace:Pairs.Effects" xmlns:converters="clr-namespace:Pairs.Converters"
+             x:Class="Pairs.Views.MainPage"
+             x:DataType="viewModels:MainPageViewModel"
+             BackgroundColor="{StaticResource Color01}">
+    <ContentPage.BindingContext>
+        <viewModels:MainPageViewModel PropertyChanged="MainPageViewModel_PropertyChanged"/>
+    </ContentPage.BindingContext>
     <ContentPage.Resources>
         <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
         <converters:StringToPathGeometryConverter x:Key="StringToPathGeometryConverter" />
@@ -43,7 +42,6 @@
                 <Setter Property="HeightRequest" Value="30" />
                 <Setter Property="VerticalOptions" Value="Start" />
                 <Setter Property="WidthRequest" Value="30" />
-                <Setter Property="BorderColor" Value="Transparent" />
             </Style>
             <Style x:Key="ContentFrameStyle" TargetType="Frame">
                 <Setter Property="Padding" Value="0" />
@@ -55,18 +53,17 @@
                 <Setter Property="HorizontalOptions" Value="Center" />
                 <Setter Property="IsClippedToBounds" Value="True" />
                 <Setter Property="WidthRequest" Value="24" />
-                <Setter Property="BorderColor" Value="Transparent" />
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
 
     <Grid RowDefinitions="80,*">
-        <!--<lottie:AnimationView Animation="background.json"
+        <lottie:AnimationView Animation="background.json"
                               AnimationSource="AssetOrBundle"
                               RepeatMode="Infinite"
                               Grid.RowSpan="2"
                               VerticalOptions="FillAndExpand"
-                              HorizontalOptions="FillAndExpand" />-->
+                              HorizontalOptions="FillAndExpand" />
 
         <Grid ColumnDefinitions="*,Auto">
             <StackLayout BindableLayout.ItemsSource="{Binding GuessedTiles}"
@@ -95,6 +92,7 @@
                    Margin="0,0,25,0"
                    Grid.Column="1" />
         </Grid>
+        
 
         <Polygon Points="0,0 80,40 0,80"
                  Fill="#2A9D8F"
@@ -122,18 +120,13 @@
                     <Grid WidthRequest="80"
                           HeightRequest="80"
                           Margin="5">
-                        <Grid.GestureRecognizers>
-                            <TapGestureRecognizer
-                                Command="{Binding Path=SelectTileCommand, Source={RelativeSource AncestorType={x:Type viewModels:MainPageViewModel}}}"
-                                CommandParameter="{Binding}" />
-                        </Grid.GestureRecognizers>
-                        <!--<Grid.Effects>
+                        <Grid.Effects>
                             <effects:ParticleEffect Image="star"
                                                     NumberOfParticles="40"
                                                     LifeTime="0.3"
                                                     Scale="0.5"
                                                     Speed="0.3" />
-                        </Grid.Effects>-->
+                        </Grid.Effects>
                         <Frame IsClippedToBounds="True"
                                Padding="0"
                                HasShadow="False"
@@ -142,15 +135,26 @@
                             <Frame.Behaviors>
                                 <behaviors:TileStateBehavior />
                             </Frame.Behaviors>
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Path=SelectTileCommand, Source={RelativeSource AncestorType={x:Type viewModels:MainPageViewModel}}}"
+                                                      CommandParameter="{Binding}" />
+                            </Frame.GestureRecognizers>
 
-                            <Path
-                                Fill="#264653"
-                                Data="{Binding Path, Converter={StaticResource StringToPathGeometryConverter}}"
-                                HorizontalOptions="Center"
-                                VerticalOptions="Center"
-                                IsVisible="False"
-                                WidthRequest="50"
-                                HeightRequest="50" />
+                            <Path Fill="#264653"
+                                     Data="{Binding Path, Converter={StaticResource StringToPathGeometryConverter}}"
+                                     HorizontalOptions="Center"
+                                     VerticalOptions="Center"
+                                     IsVisible="False"
+                                     WidthRequest="50"
+                                     HeightRequest="50" />
+
+                            <!--<Polygon Fill="#264653"
+                                     Points="{Binding Path, Converter={StaticResource StringToPathGeometryConverter}}"
+                                     HorizontalOptions="Center"
+                                     VerticalOptions="Center"
+                                     IsVisible="False"
+                                     WidthRequest="50"
+                                     HeightRequest="50" />-->
                         </Frame>
                     </Grid>
                 </DataTemplate>
@@ -173,12 +177,12 @@
                        VerticalOptions="Start"
                        FontSize="Title" />
 
-                <!--<lottie:AnimationView Animation="trophy.json"
+                <lottie:AnimationView Animation="trophy.json"
                                       x:Name="TrophyAnimation"
                                       AnimationSource="AssetOrBundle"
                                       AutoPlay="False"
                                       VerticalOptions="FillAndExpand"
-                                      HorizontalOptions="FillAndExpand" />-->
+                                      HorizontalOptions="FillAndExpand" />
 
                 <Polygon Points="0,0 40,20 0,40"
                          Fill="#2A9D8F"

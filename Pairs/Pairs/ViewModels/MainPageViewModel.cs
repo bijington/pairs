@@ -1,49 +1,29 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Pairs.Data;
 using Pairs.Models;
 
 namespace Pairs.ViewModels;
 
-public class MainPageViewModel : ObservableObject
+public partial class MainPageViewModel : ObservableObject
 {
     private TileViewModel currentTile;
     private CancellationTokenSource cancelAnimationTokenSource;
-    private int guessedCount = 10;
+
+    [ObservableProperty]
+    private int guessedCount;
+
+    [ObservableProperty]
     private LevelState state;
-
-    public int GuessedCount
-    {
-        get => guessedCount;
-        set => SetProperty(ref guessedCount, value);
-    }
-
-    public LevelState State
-    {
-        get => state;
-        set => SetProperty(ref state, value);
-    }
-
-    public ICommand PlayCommand { get; }
 
     public ObservableCollection<TileViewModel> GuessedTiles { get; } = new ObservableCollection<TileViewModel>();
 
     public ObservableCollection<TileViewModel> Tiles { get; } = new ObservableCollection<TileViewModel>();
 
-    public ICommand SelectTileCommand { get; }
-
-    public MainPageViewModel()
-    {
-        //PlayCommand = new AsyncCommand(LoadAsync, allowsMultipleExecutions: false);
-        //SelectTileCommand = new AsyncCommand<TileViewModel>(OnSelectTile, allowsMultipleExecutions: true);
-
-        GuessedTiles.Add(new TileViewModel(new Shape("")));
-        GuessedTiles.Add(new TileViewModel(new Shape("")));
-        GuessedTiles.Add(new TileViewModel(new Shape("")));
-    }
-
-    private async Task OnSelectTile(TileViewModel tile)
+    [RelayCommand]
+    private async Task SelectTile(TileViewModel tile)
     {
         cancelAnimationTokenSource?.Cancel();
 
@@ -107,7 +87,8 @@ public class MainPageViewModel : ObservableObject
         }
     }
 
-    private async Task LoadAsync()
+    [RelayCommand]
+    private async Task Play()
     {
         var shapeRepository = new ShapeRepository();
 

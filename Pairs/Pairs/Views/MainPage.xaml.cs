@@ -10,4 +10,12 @@ public partial class MainPage : ContentPage
 
 		BindingContext = mainPageViewModel;
 	}
+
+    void SKLottieView_AnimationFailed(System.Object sender, System.EventArgs e)
+    {
+    }
+
+    void SKLottieView_AnimationLoaded(System.Object sender, System.EventArgs e)
+    {
+    }
 }

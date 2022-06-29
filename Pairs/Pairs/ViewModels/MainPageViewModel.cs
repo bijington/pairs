@@ -11,12 +11,18 @@ public partial class MainPageViewModel : ObservableObject
 {
     private TileViewModel currentTile;
     private CancellationTokenSource cancelAnimationTokenSource;
+    private readonly IHapticFeedback hapticFeedback;
 
     [ObservableProperty]
     private int guessedCount;
 
     [ObservableProperty]
     private LevelState state;
+
+    public MainPageViewModel(IHapticFeedback hapticFeedback)
+    {
+        this.hapticFeedback = hapticFeedback;
+    }
 
     public ObservableCollection<TileViewModel> GuessedTiles { get; } = new ObservableCollection<TileViewModel>();
 
@@ -36,6 +42,10 @@ public partial class MainPageViewModel : ObservableObject
             {
                 this.currentTile.IsGuessed = true;
                 tile.IsGuessed = true;
+
+                this.hapticFeedback.Perform(HapticFeedbackType.Click);
+                await Task.Delay(TimeSpan.FromMilliseconds(100));
+                this.hapticFeedback.Perform(HapticFeedbackType.Click);
             }
 
             await ShowSelectionAsync();

@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui;
 using Pairs.ViewModels;
 using Pairs.Views;
+using SkiaSharp.Views.Maui.Controls.Hosting;
 
 namespace Pairs;
 
@@ -12,6 +13,7 @@ public static class MauiProgram
 		builder
 			.UseMauiApp<App>()
 			.UseMauiCommunityToolkit()
+			.UseSkiaSharp()
 			.ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -20,6 +22,8 @@ public static class MauiProgram
 
 		builder.Services.AddTransient<MainPage>();
 		builder.Services.AddTransient<MainPageViewModel>();
+
+		builder.Services.AddSingleton(HapticFeedback.Default);
 
 		return builder.Build();
 	}

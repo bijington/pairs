@@ -44,23 +44,10 @@
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
-	<ItemGroup>
-	  <None Remove="Data\" />
-	  <None Remove="Models\" />
-	  <None Remove="Refractored.MvvmHelpers" />
-	  <None Remove="CommunityToolkit.Mvvm" />
-	  <None Remove="CommunityToolkit.Maui" />
-	  <None Remove="Behaviors\" />
-	  <None Remove="Converters\" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Data\" />
-	  <Folder Include="Models\" />
-	  <Folder Include="Behaviors\" />
-	  <Folder Include="Converters\" />
-	</ItemGroup>
+
 	<ItemGroup>
 	  <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0-preview4" />
 	  <PackageReference Include="CommunityToolkit.Maui" Version="1.0.0" />
+	  <PackageReference Include="SkiaSharp.Extended.UI.Maui" Version="2.0.0-preview.50" />
 	</ItemGroup>
 </Project>

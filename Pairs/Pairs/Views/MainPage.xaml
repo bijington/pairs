@@ -7,6 +7,7 @@
     xmlns:converters="clr-namespace:Pairs.Converters"
     xmlns:models="clr-namespace:Pairs.Models"
     xmlns:viewModels="clr-namespace:Pairs.ViewModels"
+    xmlns:controls="clr-namespace:SkiaSharp.Extended.UI.Controls;assembly=SkiaSharp.Extended.UI"
     x:Class="Pairs.Views.MainPage"
     Shell.NavBarIsVisible="False"
     x:DataType="viewModels:MainPageViewModel"
@@ -61,12 +62,13 @@
     </ContentPage.Resources>
 
     <Grid RowDefinitions="80,*">
-        <!--<lottie:AnimationView Animation="background.json"
-                              AnimationSource="AssetOrBundle"
-                              RepeatMode="Infinite"
-                              Grid.RowSpan="2"
-                              VerticalOptions="FillAndExpand"
-                              HorizontalOptions="FillAndExpand" />-->
+        <controls:SKLottieView Source="background.json"
+                               IsRunning="True"
+                               RepeatCount="99"
+                               RepeatMode="Restart"
+                               Grid.RowSpan="2"
+                               AnimationFailed="SKLottieView_AnimationFailed"
+                               AnimationLoaded="SKLottieView_AnimationLoaded"/>
 
         <Grid ColumnDefinitions="*,Auto">
             <StackLayout BindableLayout.ItemsSource="{Binding GuessedTiles}"

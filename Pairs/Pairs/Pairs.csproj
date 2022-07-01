@@ -48,6 +48,6 @@
 	<ItemGroup>
 	  <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0-preview4" />
 	  <PackageReference Include="CommunityToolkit.Maui" Version="1.0.0" />
-	  <PackageReference Include="SkiaSharp.Extended.UI.Maui" Version="2.0.0-preview.50" />
+	  <PackageReference Include="SkiaSharp.Extended.UI.Maui" Version="2.0.0-preview.52" />
 	</ItemGroup>
 </Project>

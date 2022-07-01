@@ -68,7 +68,7 @@
                                RepeatMode="Restart"
                                Grid.RowSpan="2"
                                AnimationFailed="SKLottieView_AnimationFailed"
-                               AnimationLoaded="SKLottieView_AnimationLoaded"/>
+                               AnimationLoaded="SKLottieView_AnimationLoaded" />
 
         <Grid ColumnDefinitions="*,Auto">
             <StackLayout BindableLayout.ItemsSource="{Binding GuessedTiles}"

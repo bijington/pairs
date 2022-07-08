@@ -1,22 +1,37 @@
 ﻿using Pairs.ViewModels;
-using Xamarin.Forms;
 
-namespace Pairs.Views
+namespace Pairs.Views;
+
+public partial class MainPage : ContentPage
 {
-    public partial class MainPage : ContentPage
-    {
-        public MainPage()
-        {
-            InitializeComponent();
-        }
+	public MainPage(MainPageViewModel mainPageViewModel)
+	{
+		InitializeComponent();
 
-        void MainPageViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		BindingContext = mainPageViewModel;
+	}
+
+    protected async override void OnAppearing()
+    {
+        base.OnAppearing();
+
+        try
         {
-            if (e.PropertyName == nameof(MainPageViewModel.State) &&
-                ((MainPageViewModel)BindingContext).State == Models.LevelState.Complete)
-            {
-                TrophyAnimation.PlayAnimation();
-            }
+            var s = await FileSystem.OpenAppPackageFileAsync("background.json");
+
+            var animation = SkiaSharp.Skottie.Animation.Create(s);
         }
+        catch (Exception ex)
+        {
+
+        }
+    }
+
+    void SKLottieView_AnimationFailed(System.Object sender, System.EventArgs e)
+    {
+    }
+
+    void SKLottieView_AnimationLoaded(System.Object sender, System.EventArgs e)
+    {
     }
 }

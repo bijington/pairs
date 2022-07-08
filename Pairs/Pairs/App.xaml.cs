@@ -1,27 +1,12 @@
-﻿using Xamarin.Forms;
-using Pairs.Views;
+﻿namespace Pairs;
 
-namespace Pairs
+public partial class App : Application
 {
-    public partial class App : Application
-    {
-        public App()
-        {
-            InitializeComponent();
+	public App()
+	{
+		InitializeComponent();
 
-            MainPage = new MainPage();
-        }
-
-        protected override void OnStart()
-        {
-        }
-
-        protected override void OnSleep()
-        {
-        }
-
-        protected override void OnResume()
-        {
-        }
-    }
+		MainPage = new AppShell();
+	}
 }
+

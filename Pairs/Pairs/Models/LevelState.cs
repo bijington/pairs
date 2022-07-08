@@ -1,9 +1,8 @@
-﻿namespace Pairs.Models
+﻿namespace Pairs.Models;
+
+public enum LevelState
 {
-    public enum LevelState
-    {
-        None,
-        Playing,
-        Complete
-    }
+    None,
+    Playing,
+    Complete
 }

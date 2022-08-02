@@ -11,27 +11,7 @@ public partial class MainPage : ContentPage
 		BindingContext = mainPageViewModel;
 	}
 
-    protected async override void OnAppearing()
-    {
-        base.OnAppearing();
-
-        try
-        {
-            var s = await FileSystem.OpenAppPackageFileAsync("background.json");
-
-            var animation = SkiaSharp.Skottie.Animation.Create(s);
-        }
-        catch (Exception ex)
-        {
-
-        }
-    }
-
     void SKLottieView_AnimationFailed(System.Object sender, System.EventArgs e)
-    {
-    }
-
-    void SKLottieView_AnimationLoaded(System.Object sender, System.EventArgs e)
     {
     }
 }

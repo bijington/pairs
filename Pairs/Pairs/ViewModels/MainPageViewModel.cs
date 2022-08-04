@@ -1,144 +1,142 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
-using MvvmHelpers;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Pairs.Data;
 using Pairs.Models;
-using Xamarin.CommunityToolkit.ObjectModel;
 
-namespace Pairs.ViewModels
+namespace Pairs.ViewModels;
+
+public partial class MainPageViewModel : ObservableObject
 {
-    public class MainPageViewModel : BaseViewModel
+    private TileViewModel currentTile;
+    private CancellationTokenSource cancelAnimationTokenSource;
+    private readonly IHapticFeedback hapticFeedback;
+
+    [ObservableProperty]
+    private int guessedCount;
+
+    [ObservableProperty]
+    private LevelState state;
+
+    public MainPageViewModel(IHapticFeedback hapticFeedback)
     {
-        private SpeakerViewModel currentSpeaker;
-        private CancellationTokenSource cancelAnimationTokenSource;
-        private int guessedCount;
-        private LevelState state;
+        this.hapticFeedback = hapticFeedback;
+    }
 
-        public int GuessedCount
+    public ObservableCollection<TileViewModel> GuessedTiles { get; } = new ObservableCollection<TileViewModel>();
+
+    public ObservableCollection<TileViewModel> Tiles { get; } = new ObservableCollection<TileViewModel>();
+
+    [RelayCommand]
+    private async Task SelectTile(TileViewModel tile)
+    {
+        cancelAnimationTokenSource?.Cancel();
+
+        tile.IsSelected = !tile.IsSelected;
+
+        if (this.currentTile is not null)
         {
-            get => guessedCount;
-            set => SetProperty(ref guessedCount, value);
-        }
-
-        public LevelState State
-        {
-            get => state;
-            set => SetProperty(ref state, value);
-        }
-
-        public ICommand PlayCommand { get; }
-
-        public MvvmHelpers.ObservableRangeCollection<SpeakerViewModel> GuessedSpeakers { get; } = new MvvmHelpers.ObservableRangeCollection<SpeakerViewModel>();
-
-        public MvvmHelpers.ObservableRangeCollection<SpeakerViewModel> Speakers { get; } = new MvvmHelpers.ObservableRangeCollection<SpeakerViewModel>();
-
-        public ICommand SelectTileCommand { get; }
-
-        public MainPageViewModel()
-        {
-            PlayCommand = new AsyncCommand(LoadAsync, allowsMultipleExecutions: false);
-            SelectTileCommand = new AsyncCommand<SpeakerViewModel>(OnSelectTile, allowsMultipleExecutions: true);
-        }
-
-        private async Task OnSelectTile(SpeakerViewModel speaker)
-        {
-            cancelAnimationTokenSource?.Cancel();
-
-            speaker.IsSelected = !speaker.IsSelected;
-
-            if (this.currentSpeaker is not null)
+            if (this.currentTile.Path == tile.Path &&
+                ReferenceEquals(this.currentTile, tile) == false)
             {
-                if (this.currentSpeaker.Name == speaker.Name &&
-                    ReferenceEquals(this.currentSpeaker, speaker) == false)
-                {
-                    this.currentSpeaker.IsGuessed = true;
-                    speaker.IsGuessed = true;
-                }
+                this.currentTile.IsGuessed = true;
+                tile.IsGuessed = true;
 
-                cancelAnimationTokenSource = new CancellationTokenSource();
-
-                try
-                {
-                    await Task.Delay(500, cancelAnimationTokenSource.Token);
-                }
-                catch (OperationCanceledException)
-                {
-
-                }
-                finally
-                {
-                    cancelAnimationTokenSource = null;
-                }
-
-                if (this.currentSpeaker.Name == speaker.Name &&
-                    ReferenceEquals(this.currentSpeaker, speaker) == false)
-                {
-                    if (GuessedSpeakers.Count < 5)
-                    {
-                        GuessedSpeakers.Add(speaker);
-                    }
-
-                    this.currentSpeaker.IsSelected = false;
-                    this.currentSpeaker = null;
-
-                    GuessedCount++;
-                }
-                else
-                {
-                    this.currentSpeaker.IsSelected = false;
-                }
-
-                speaker.IsSelected = false;
+                this.hapticFeedback.Perform(HapticFeedbackType.Click);
+                await Task.Delay(TimeSpan.FromMilliseconds(100));
+                this.hapticFeedback.Perform(HapticFeedbackType.Click);
             }
 
-            this.currentSpeaker = speaker.IsSelected ? speaker : null;
+            await ShowSelectionAsync();
 
-            if (Speakers.All(s => s.IsGuessed))
+            if (this.currentTile.Path == tile.Path &&
+                ReferenceEquals(this.currentTile, tile) == false)
             {
-                State = LevelState.Complete;
+                if (GuessedTiles.Count < 5)
+                {
+                    GuessedTiles.Add(tile);
+                }
+
+                this.currentTile.IsSelected = false;
+                this.currentTile = null;
+
+                GuessedCount++;
             }
+            else
+            {
+                this.currentTile.IsSelected = false;
+            }
+
+            tile.IsSelected = false;
         }
 
-        private async Task LoadAsync()
+        this.currentTile = tile.IsSelected ? tile : null;
+
+        if (Tiles.All(s => s.IsGuessed))
         {
-            var speakerRepository = new SpeakerRepository();
+            State = LevelState.Complete;
+        }
+    }
 
-            var allSpeakers = await speakerRepository.ListAsync();
+    private async Task ShowSelectionAsync()
+    {
+        cancelAnimationTokenSource = new CancellationTokenSource();
 
-            var random = new Random();
+        try
+        {
+            await Task.Delay(500, cancelAnimationTokenSource.Token);
+        }
+        catch (OperationCanceledException)
+        {
 
-            const int gridSize = 4;
-            var requiredSpeakerCount = gridSize / 2;
+        }
+        finally
+        {
+            cancelAnimationTokenSource = null;
+        }
+    }
 
-            var actualSpeakers = new List<SpeakerViewModel>(gridSize);
+    [RelayCommand]
+    private async Task Play()
+    {
+        var shapeRepository = new ShapeRepository();
 
-            for (int i = 0; i < requiredSpeakerCount; i++)
-            {
-                var speakerIndex = random.Next(allSpeakers.Count);
-                var speaker = allSpeakers[speakerIndex];
-                allSpeakers.RemoveAt(speakerIndex);
+        var allShapes = await shapeRepository.ListAsync();
 
-                actualSpeakers.Add(new SpeakerViewModel(speaker));
-                actualSpeakers.Add(new SpeakerViewModel(speaker));
-            }
+        var random = new Random();
 
-            int n = actualSpeakers.Count;
+        const int gridSize = 20;
+        var requiredSpeakerCount = gridSize / 2;
 
-            while (n > 1)
-            {
-                n--;
-                int k = random.Next(n + 1);
-                var value = actualSpeakers[k];
-                actualSpeakers[k] = actualSpeakers[n];
-                actualSpeakers[n] = value;
-            }
+        var actualTiles = new List<TileViewModel>(gridSize);
 
-            State = LevelState.Playing;
-            Speakers.ReplaceRange(actualSpeakers);
+        for (int i = 0; i < requiredSpeakerCount; i++)
+        {
+            var shapeIndex = random.Next(allShapes.Count);
+            var shape = allShapes[shapeIndex];
+            allShapes.RemoveAt(shapeIndex);
+
+            actualTiles.Add(new TileViewModel(shape));
+            actualTiles.Add(new TileViewModel(shape));
+        }
+
+        int n = actualTiles.Count;
+
+        while (n > 1)
+        {
+            n--;
+            int k = random.Next(n + 1);
+            var value = actualTiles[k];
+            actualTiles[k] = actualTiles[n];
+            actualTiles[n] = value;
+        }
+
+        State = LevelState.Playing;
+        Tiles.Clear();
+        foreach (var tile in actualTiles)
+        {
+            Tiles.Add(tile);
         }
     }
 }
